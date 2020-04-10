@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		
+		<script src="dom_utils.js"></script>
+		
+		<script>
+			function clr(){
+				var calcPlace = document.getElementById("calculator");
+				while (calcPlace.firstChild != null){
+					calcPlace.removeChild(calcPlace.firstChild);
+				}
+			}
+			
+			function add(element){
+				document.getElementById("calculator").appendChild(element);
+			}	
+			
+			function createSquareRoot(){
+				add(text_test("a", test));
+				add(label(" x^2  +  "));
+				add(text("b"));
+				add(label(" x   +   "));
+				add(text("c"));
+				add(label("   =  0"));		add(br());add(br());
+				add(button("Решить квадратное уравнение", calculateResult));	add(br());add(br());
+				add(label("Корни: "));
+				add(label(" x1 "));
+				add(text("x1"));
+				add(label(" x2 "));
+				add(text("x2"));		add(br());add(br());
+				add(label_("  ", "lab"));
+			}
+			
+			function createPercent(){
+				add(label("Сумма вклада: "));
+				add(text("id_summa"));		add(br());
+				add(label("Срок вклада (лет): "));
+				add(number("id_srok"));	  	add(br());
+				add(label("Процентная ставка (годовых): "));
+				add(text("id_procent"));	add(br());
+				add(button("%", calculatePercent));		add(br());
+				add(label("Доход: "));
+				add(text("id_dohod"));
+			}
+			
+			function calculatePercent(){
+				var s = document.getElementById("id_summa").value;
+				var t = document.getElementById("id_srok").value;
+				var p = document.getElementById("id_procent").value;
+				document.getElementById("id_dohod").value = 0.01*s*p*t;
+			}
+			
+			function calculateResult(){
+				var a = parseFloat(document.getElementById("a").value);
+				var b = parseFloat(document.getElementById("b").value);
+				var c = parseFloat(document.getElementById("c").value);
+				var disc = b**2-4*a*c;
+				var x1;
+				var x2;
+				if (disc > 0){
+					x1 = ((-b+Math.sqrt(disc))/2*a).toFixed(2);
+					x2 = ((-b-Math.sqrt(disc))/2*a).toFixed(2);
+					document.getElementById("lab").innerHTML = "";
+				} else if (disc == 0){
+					x1 = (-b/2*a).toFixed(2);
+					x2 = "-"
+					document.getElementById("lab").innerHTML = "";
+				}else{
+					document.getElementById("lab").innerHTML = "Корней нет";
+					x1 = "-"
+					x2 = "-"
+				}
+				document.getElementById("x1").value = x1;
+				document.getElementById("x2").value = x2;
+			}
+			
+			function test(){
+				var a = document.getElementById("a").value;
+				if(isNaN(a)){
+					document.getElementById("lab").innerHTML = "Введено не число!";
+				} else{
+					document.getElementById("lab").innerHTML = "";
+				}
+			}
+			
+		</script>
+	</head>
+	
+	<body onload="createSquareRoot()">
+		<div id="selector">
+			<input type="radio" name="calculatorType" onclick="clr();createSquareRoot()" checked="true">
+			 Калькулятор квадратных уравнений
+			<br>
+			<input type="radio" name="calculatorType" onclick="clr();createPercent()">
+			Калькулятор процентов
+		</div>
+
+		<br>
+		<div id="calculator">
+		</div>
+	</body>
+</html>
