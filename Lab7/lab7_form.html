@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		
+		<style>
+			table{
+				width: 50%;
+				border-spacing: 3px;
+				float: center;
+			}
+			
+			td{
+				text-align: center;
+				padding: 5px;
+				border: 1px solid white;
+			}
+			
+			tr{
+				text-align: center;
+				padding: 5px;
+			}
+			
+			span{
+				color: red;
+			}
+			
+			/*нечетная*/
+			table tr:nth-child(odd){
+				background: PeachPuff;
+			}
+			/*четная*/
+			table tr:nth-child(even){
+				background: LemonChiffon;
+			}
+		
+			table tr:first-child{
+				font-weight: bold;
+			}
+			
+		</style>
+		
+		<script>
+		
+			var Record = {
+				sname:'Фамилия',
+				name:'Имя',
+				bdate:'Дата рождения',
+				email:'E-mail',
+				phone:'Телефон'
+			}
+			
+			var records = [
+				 Record = {
+					sname:'Фамилия',
+					name:'Имя',
+					bdate:'Дата рождения',
+					email:'E-mail',
+					phone:'Телефон'
+					}
+			];
+			
+			function displayRecords(){
+				disable();
+				var element = document.getElementById('table_place');
+				var myTable = document.getElementById('myTable');
+				if(myTable == null){
+					myTable = document.createElement('table');
+					myTable.id = 'myTable';
+					element.appendChild(myTable);
+				}
+				var amount_row = myTable.rows.length;
+				for(amount_row; amount_row < records.length; amount_row++){
+					var tr = document.createElement('tr');
+					tr.id = 'row';
+					myTable.appendChild(tr);
+					for (var j in records[amount_row]){
+						var td = document.createElement('td');
+						tr.appendChild(td);
+						var text = records[amount_row][j];
+						td.innerHTML = text;
+					}
+				}
+			}
+			
+			function send(){
+				document.getElementById('table_place').innerHTML = '';
+				var sname = document.getElementById('sname').value;
+				var name = document.getElementById('name').value;
+				var bdate = document.getElementById('bdate').value;
+				var email = document.getElementById('email').value;
+				var phone = document.getElementById('phone').value;
+	
+				var Record = {sname: sname,name: name,bdate: bdate,email: email,phone: phone};
+				records.push(Record);
+				displayRecords();
+			}
+			
+			function enable(){
+				document.getElementById('send').disabled = false;
+			}
+			
+			function disable(){
+				document.getElementById('send').disabled = true;
+			}
+			
+			function checkAll(){
+				checkName(document.getElementById('name'));
+				checkName(document.getElementById('sname'));
+				checkEmail(document.getElementById('email'));
+				checkPhone(document.getElementById('phone'));
+				checkDate(document.getElementById('bdate'));
+				var name = document.getElementById('namemes').innerHTML;
+				var sname = document.getElementById('snamemes').innerHTML;
+				var email = document.getElementById('emailmes').innerHTML;
+				var phone = document.getElementById('phonemes').innerHTML;
+				var bdate = document.getElementById('bdatemes').innerHTML;
+				if(name == '' && sname == '' && email == '' && phone == '' && bdate == ''){
+					enable();
+				}else{
+					disable();
+				}
+			}
+			
+			function checkName(field){
+				label = document.getElementById(field.id + 'mes');
+				if(isEmpty(field)){
+					label.innerHTML = 'Поле не заполнено!';
+					
+				} else if (isLonger20(field)){
+					label.innerHTML = 'Введено более 20 символов!';
+				} else if (containtsDigits(field)){
+					label.innerHTML = 'Введены цифры!';
+				} else{
+					label.innerHTML = '';
+				}
+			}
+			
+			function isEmpty(field){
+				return field.value.length==0;
+			}
+			function isLonger20(field){
+				return field.value.length>20;
+			}
+			function containtsDigits(field){
+				var digits = '0123456789';
+				for(var i=0; i<digits.length; i++){
+					if(field.value.indexOf(digits[i])!=-1){
+						return true;
+					}
+				}
+				return false;
+			}
+						
+			function checkEmail(field){
+				label = document.getElementById(field.id + 'mes');
+				if(isEmpty(field)){
+					label.innerHTML = 'Поле не заполнено!';
+				} else if (!isCorrectEmail(field)){
+					label.innerHTML = 'Некорректно введен e-mail!';
+				} else{
+					label.innerHTML = '';
+				}
+			}
+			
+			function isCorrectEmail(field){
+			var emailReg = /^\w+@\w+\.\w{2,4}$/;
+				return emailReg.test(field.value);
+			}
+			
+			function checkPhone(field){
+				label = document.getElementById(field.id + 'mes');
+				if(isEmpty(field)){
+					label.innerHTML = 'Поле не заполнено!';
+				} else if (!isCorrectPhone(field)){
+					label.innerHTML = 'Некорректно введен телефон!';
+				} else{
+					label.innerHTML = '';
+				}
+			}
+			
+			function isCorrectPhone(field){
+			var phoneReg = /^[[7,8]\-]?[0-9]{3}\-[0-9]{3}\-[0-9]{2}\-[0-9]{2}$/;
+			var phoneReg_ = /^\([0-9]{3}\)[0-9]{3}\-[0-9]{2}\-[0-9]{2}$/;
+			if (phoneReg.test(field.value)| phoneReg_.test(field.value))
+				return true;
+			else
+				return false;
+			}
+			
+			function checkDate(field){
+				label = document.getElementById(field.id + 'mes');
+				if(isEmpty(field)){
+					label.innerHTML = 'Поле не заполнено!';
+				} else if (!isCorrectDate(field)){
+					label.innerHTML = 'Некорректно введена дата!';
+				} else if (!isCorrectDateValues(field)){
+					label.innerHTML = 'Некорректное значение даты!';
+				} else{
+					label.innerHTML = '';
+				}
+			}
+			
+			function isCorrectDate(field){
+			var dateReg = /^\d{2}(\/|\.)\d{2}(\/|\.)\d{4}$/;
+				return dateReg.test(field.value);
+			}
+			
+			function isCorrectDateValues(field){
+				var dd = parseInt(field.value.substring(0,2));
+				var mm = parseInt(field.value.substring(3,5));
+				return 1<=dd && dd<=31 && 1<=mm && mm<=12;
+			}
+			
+		</script>
+		
+	</head>
+	
+	<body onload="displayRecords()">
+		<div id="toolbar">
+			Фамилия: <input type='text' id='sname' onkeyup='checkAll()' onblur='checkAll()'>
+			<span id='snamemes'></span><br><br>
+			Имя: <input type='text' id='name' onkeyup='checkAll()' onblur='checkAll()'>
+			<span id='namemes'></span><br><br>
+			Дата рождения: <input type='text' id='bdate' onkeyup='checkAll()' onblur='checkAll()'>
+			<span id='bdatemes'></span><br><br>
+			E-mail: <input type='text' id='email' onkeyup='checkAll()' onblur='checkAll()'>
+			<span id='emailmes'></span><br><br>
+			Телефон: <input type='text' id='phone' onkeyup='checkAll()' onblur='checkAll()'>
+			<span id='phonemes'></span><br><br>
+			
+			<input id='send' type="button" value="Добавить запись" onclick="send()">
+
+		</div>
+		
+		<div id='table_place'>
+		
+		</div>
+	</body>
+</html>
